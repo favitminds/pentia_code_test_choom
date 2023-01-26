@@ -1,0 +1,47 @@
+{
+  "root": true,
+  "env": {
+      "browser": true,
+      "react-native/react-native": true,
+  },
+  "extends": [
+    "plugin:react/recommended",
+    "standard-with-typescript",
+    "eslint:recommended", 
+    "plugin:prettier/recommended",
+    "@react-native-community"
+  ],
+  "overrides": [
+      {
+          "files": ["*.ts", "*.tsx"],
+          "rules": {
+            "no-undef": "off"
+          }
+      }
+  ],
+  "parserOptions": {
+      "ecmaVersion": "latest",
+      "sourceType": "module",
+      "project": "./tsconfig.json"
+  },
+  "plugins": [
+      "react",
+      "react-native",
+      "react-hooks"
+  ],
+  "rules": {
+      "react/react-in-jsx-scope": "off",
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/consistent-type-definitions": "off",
+      "react-hooks/rules-of-hooks": "error", // For checking rules of hooks
+      "react-hooks/exhaustive-deps": "warn" // For checking hook dependencies 
+  },
+  "settings": {
+    "react": {
+        "version": "detect"
+    }
+  }
+}
+
+// INFO: Source: https://dev.to/knowankit/setup-eslint-and-prettier-in-react-app-357b
+// INFO: Source, for handling React not defined: https://stackoverflow.com/questions/64170868/why-eslint-consider-jsx-or-some-react-types-undefined-since-upgrade-typescript

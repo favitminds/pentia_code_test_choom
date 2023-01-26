@@ -1,3 +1,4 @@
 {
-  "extends": "@tsconfig/react-native/tsconfig.json"
+  "include": ["src"],
+  "references": [{"path": "./node_modules/@tsconfig/react-native/tsconfig.json"}]
 }
