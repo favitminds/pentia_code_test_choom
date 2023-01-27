@@ -9,6 +9,9 @@
     "start": "react-native start"
   },
   "dependencies": {
+    "@react-native-firebase/app": "^16.5.2",
+    "@react-native-firebase/auth": "^16.5.2",
+    "@react-native-google-signin/google-signin": "^9.0.2",
     "@react-navigation/native": "^6.1.2",
     "@react-navigation/native-stack": "^6.9.8",
     "@types/react-native": "^0.71.0",
@@ -24,7 +27,6 @@
     "@babel/runtime": "^7.20.0",
     "@react-native-community/eslint-config": "^3.0.0",
     "@tsconfig/react-native": "^2.0.2",
-    "@types/react": "^18.0.27",
     "eslint": "^8.19.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-prettier": "^4.2.1",

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "363548945580",
+    "project_id": "pentia-code-test-choom",
+    "storage_bucket": "pentia-code-test-choom.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:363548945580:android:d2431e05799ca6afa5c309",
+        "android_client_info": {
+          "package_name": "com.pentia_code_test_choom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "363548945580-0jdbte57q261ro8gkicr6ld29dboiref.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pentia_code_test_choom",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "363548945580-gij69m7i7kjpr9tgdjv3sg1m9qusejt8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtyk0B8T6UU2gEj7pmgdkIBpZTeTntyII"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "363548945580-gij69m7i7kjpr9tgdjv3sg1m9qusejt8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
