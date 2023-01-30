@@ -3,7 +3,7 @@ import {SocialIcon} from '@rneui/themed';
 import {AuthenticationContext} from '../services/authentication/AuthenticationContext';
 import {useContext} from 'react';
 
-const AuthenticationScreen = () => {
+export const AuthenticationScreen = () => {
   const {handleFacebookAuthentication, handleGoogleAuthentication} =
     useContext(AuthenticationContext);
 
@@ -41,5 +41,3 @@ const styles = StyleSheet.create({
     marginBottom: 30
   }
 });
-
-export default AuthenticationScreen;

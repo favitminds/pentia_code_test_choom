@@ -1,6 +1,6 @@
 import React from 'react';
-import Navigation from './src/navigation/Navigation';
-import AuthenticationContextProvider from './src/services/authentication/AuthenticationContext';
+import {Navigation} from './src/navigation/Navigation';
+import {AuthenticationContextProvider} from './src/services/authentication/AuthenticationContext';
 
 function App() {
   return (

@@ -21,7 +21,11 @@ export const AuthenticationContext = createContext<IAuthenticationContext>({
   user: undefined
 });
 
-const AuthenticationContextProvider = ({children}: Props) => {
+GoogleSignin.configure({
+  webClientId: '363548945580-gij69m7i7kjpr9tgdjv3sg1m9qusejt8.apps.googleusercontent.com'
+});
+
+export const AuthenticationContextProvider = ({children}: Props) => {
   const [user, setUser] = useState<FirebaseAuthTypes.User>();
   const [error, setError] = useState<string>('');
 
@@ -87,5 +91,3 @@ const AuthenticationContextProvider = ({children}: Props) => {
     </AuthenticationContext.Provider>
   );
 };
-
-export default AuthenticationContextProvider;
