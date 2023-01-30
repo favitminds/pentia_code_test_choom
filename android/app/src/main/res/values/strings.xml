@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">pentia_code_test_choom</string>
+    <string name="facebook_app_id">869001647705885</string>
+    <string name="facebook_client_token">7f9d9b8cbfc9a08873af4bbc9d9860d8</string>
+    <string name="fb_login_protocol_scheme">fb1234</string>
 </resources>
