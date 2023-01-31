@@ -4,6 +4,7 @@ import {AuthenticationContext} from '../services/authentication/AuthenticationCo
 import {useContext} from 'react';
 import {AuthenticationScreen} from '../screens/AuthenticationScreen';
 import {ChatRoomsScreen} from '../screens/ChatRoomsScreen';
+import {ChatRoomScreen} from '../screens/ChatRoomScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +22,7 @@ export const Navigation = () => {
             component={AuthenticationScreen}
           />
         )}
+        <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
