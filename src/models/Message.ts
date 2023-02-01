@@ -1,6 +1,8 @@
 export type Message = {
-  // TODO: Avatar
+  id?: string;
+  avatarUrl: string;
+  userId: string;
   userName: string;
-  date: Date;
+  createdAt: Date;
   text: string;
 };
