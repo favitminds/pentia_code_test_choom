@@ -4,6 +4,7 @@ import {Message} from '../models/Message';
 import {useContext, useEffect, useState} from 'react';
 import {ChatMessage} from '../components/ChatMessages/ChatMessage';
 import {
+  getNewestNbrOfMessages,
   listenToChatMessageUpdates,
   getNbrOfMessagesFromLastMessage
 } from '../services/ChatMessageService';
@@ -14,36 +15,40 @@ import {SCREEN_NAME_CHAT_ROOM} from '../utils/globals';
 
 export const ChatRoomScreen = () => {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [messageSent, setMessageSent] = useState(false);
   const {user} = useContext(AuthenticationContext);
-  const route = useRoute<RouteProp<StackParamList, typeof SCREEN_NAME_CHAT_ROOM>>();
-
-  // useEffect(() => {
-  //   const listener = listenToChatMessageUpdates(route.params.id, setMessages);
-  //   return () => {
-  //     listener;
-  //   };
-  // }, []);
+  const {
+    params: {id: chatRoomId}
+  } = useRoute<RouteProp<StackParamList, typeof SCREEN_NAME_CHAT_ROOM>>();
 
   useEffect(() => {
-    getMessages();
-  }, []);
+    getInitialMessages();
+  }, [chatRoomId]);
 
-  console.log(messages[messages.length - 1]);
+  const getInitialMessages = async () => {
+    const initialMessages = await getNewestNbrOfMessages(chatRoomId);
+    setMessages(initialMessages);
+  };
 
-  const getMessages = async () => {
-    let fetchedMessages = [] as Message[];
-    console.log(messages[messages.length - 1]);
-
-    if (messages.length > 0) {
-      fetchedMessages = await getNbrOfMessagesFromLastMessage(
-        route.params.id,
-        messages[messages.length - 1].id
+  useEffect(() => {
+    if (messageSent) {
+      const listener = listenToChatMessageUpdates(
+        chatRoomId,
+        newMessages => setMessages(oldMessages => [...newMessages, ...oldMessages]),
+        messages[0].id!
       );
-    } else {
-      fetchedMessages = await getNbrOfMessagesFromLastMessage(route.params.id);
+      return () => {
+        listener;
+      };
     }
+  }, [messageSent]);
+
+  const loadOldMessages = async () => {
+    const fetchedMessages = await getNbrOfMessagesFromLastMessage(
+      chatRoomId,
+      messages[messages.length - 1].id
+    );
     setMessages(oldMessages => [...oldMessages, ...fetchedMessages]);
-    console.log(messages[messages.length - 1]);
   };
 
   return (
@@ -57,13 +62,13 @@ export const ChatRoomScreen = () => {
             )}
             keyExtractor={item => item.id!}
             inverted
-            onEndReached={getMessages}
+            onEndReached={loadOldMessages}
           />
         ) : (
           ''
         )}
       </View>
-      <MessageInput roomId={route.params.id} />
+      <MessageInput roomId={chatRoomId} onInputSubmitted={() => setMessageSent(true)} />
     </View>
   );
 };

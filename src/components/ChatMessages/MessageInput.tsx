@@ -6,6 +6,7 @@ import {addChatMessageToChatRoom} from '../../services/ChatMessageService';
 
 type Props = {
   roomId: string;
+  onInputSubmitted: () => void;
 };
 
 export const MessageInput = ({roomId}: Props) => {

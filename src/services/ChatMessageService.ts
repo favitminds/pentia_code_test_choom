@@ -8,28 +8,24 @@ import {
 } from '../utils/globals';
 
 export const addChatMessageToChatRoom = async (chatRoomId: string, message: Message) => {
-  await firestore()
-    .collection(DB_CHAT_ROOMS_COLLECTION_NAME)
-    .doc(chatRoomId)
-    .collection(DB_CHAT_MESSAGES_COLLECTION_NAME)
-    .add({
-      avatarUrl: message.avatarUrl,
-      userName: message.userName,
-      userId: message.userId,
-      text: message.text,
-      createdAt: message.createdAt
-    });
+  await queryBuilder(chatRoomId).add({
+    avatarUrl: message.avatarUrl,
+    userName: message.userName,
+    userId: message.userId,
+    text: message.text,
+    createdAt: message.createdAt
+  });
 };
 
 export const listenToChatMessageUpdates = async (
   chatRoomId: string,
-  callback: (messages: Message[]) => void
+  callback: (messages: Message[]) => void,
+  messageId: string
 ) => {
-  firestore()
-    .collection(DB_CHAT_ROOMS_COLLECTION_NAME)
-    .doc(chatRoomId)
-    .collection(DB_CHAT_MESSAGES_COLLECTION_NAME)
-    .orderBy('createdAt', 'desc')
+  const messageMatch = await queryBuilder(chatRoomId).doc(messageId).get();
+
+  queryBuilder(chatRoomId, FIELD_CREATED_AT, 'desc')
+    .endBefore(messageMatch)
     .limit(MESSAGES_UPDATE_LIMIT)
     .onSnapshot(snapshot => {
       const mappedMessages = snapshot.docs.map(doc => {
@@ -45,19 +41,42 @@ export const getNbrOfMessagesFromLastMessage = async (
   messageId?: string,
   numberOfMessages = MESSAGES_LIMIT
 ) => {
+  const messageMatch = await queryBuilder(chatRoomId).doc(messageId).get();
+
+  const filteredMessagesDocuments = await queryBuilder(chatRoomId, FIELD_CREATED_AT, 'desc')
+    .startAfter(messageMatch)
+    .limit(numberOfMessages)
+    .get();
+
+  return filteredMessagesDocuments.docs.map(doc => mapToChatMessageModel(doc));
+};
+
+export const getNewestNbrOfMessages = async (
+  chatRoomId: string,
+  numberOfMessages = MESSAGES_LIMIT
+) => {
+  let messagesDocuments = await queryBuilder(chatRoomId, FIELD_CREATED_AT, 'desc')
+    .limit(numberOfMessages)
+    .get();
+
+  return messagesDocuments.docs.map(doc => mapToChatMessageModel(doc));
+};
+
+const queryBuilder = (chatRoomId: string, orderBy?: string, order?: SORTING_ORDER) => {
   let query = firestore()
     .collection(DB_CHAT_ROOMS_COLLECTION_NAME)
     .doc(chatRoomId)
-    .collection(DB_CHAT_MESSAGES_COLLECTION_NAME)
-    .orderBy('createdAt', 'desc');
+    .collection(DB_CHAT_MESSAGES_COLLECTION_NAME);
 
-  if (messageId) {
-    query = query.startAfter(messageId);
+  if (orderBy && order) {
+    query.orderBy(orderBy, order);
   }
-  const data = await query.limit(numberOfMessages).get();
 
-  return data.docs.map(doc => mapToChatMessageModel(doc));
+  return query;
 };
+
+const FIELD_CREATED_AT = 'createdAt';
+type SORTING_ORDER = 'asc' | 'desc';
 
 const mapToChatMessageModel = (
   firestoreDocument: FirebaseFirestoreTypes.QueryDocumentSnapshot<FirebaseFirestoreTypes.DocumentData>
