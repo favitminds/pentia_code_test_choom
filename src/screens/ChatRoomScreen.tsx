@@ -32,9 +32,12 @@ export const ChatRoomScreen = () => {
 
   useEffect(() => {
     if (messageSent) {
-      const listener = listenToChatMessageUpdates(chatRoomId, newMessages =>
-        setMessages(oldMessages => [...newMessages, ...oldMessages])
+      const listener = listenToChatMessageUpdates(
+        chatRoomId,
+        newMessages => setMessages(oldMessages => [...newMessages, ...oldMessages]),
+        messages[0].id!
       );
+
       return () => {
         listener;
       };

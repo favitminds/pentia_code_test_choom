@@ -19,13 +19,13 @@ export const addChatMessageToChatRoom = async (chatRoomId: string, message: Mess
 
 export const listenToChatMessageUpdates = async (
   chatRoomId: string,
-  callback: (messages: Message[]) => void
-  // messageId: string
+  callback: (messages: Message[]) => void,
+  messageId: string
 ) => {
-  // const messageMatch = await queryBuilder(chatRoomId).doc(messageId).get();
+  const messageMatch = await queryBuilder(chatRoomId).doc(messageId).get();
 
   queryBuilder(chatRoomId, FIELD_CREATED_AT, 'desc')
-    // .endBefore(messageMatch)
+    .endBefore(messageMatch)
     .limit(MESSAGES_UPDATE_LIMIT)
     .onSnapshot(snapshot => {
       const mappedMessages = snapshot.docs.map(doc => {
