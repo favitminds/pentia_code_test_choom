@@ -3,8 +3,7 @@ import {Message} from '../models/Message';
 import {
   DB_CHAT_ROOMS_COLLECTION_NAME,
   DB_CHAT_MESSAGES_COLLECTION_NAME,
-  MESSAGES_LIMIT,
-  MESSAGES_UPDATE_LIMIT
+  MESSAGES_LIMIT
 } from '../utils/globals';
 
 export const addChatMessageToChatRoom = async (chatRoomId: string, message: Message) => {
@@ -20,20 +19,24 @@ export const addChatMessageToChatRoom = async (chatRoomId: string, message: Mess
 export const listenToChatMessageUpdates = async (
   chatRoomId: string,
   callback: (messages: Message[]) => void,
-  messageId: string
+  messageId?: string
 ) => {
-  const messageMatch = await queryBuilder(chatRoomId).doc(messageId).get();
+  let query = queryBuilder(chatRoomId, FIELD_CREATED_AT, 'asc');
+  if (messageId) {
+    const messageMatch = await queryBuilder(chatRoomId).doc(messageId).get();
+    query.endBefore(messageMatch);
+  } else {
+    query.limit(MESSAGES_LIMIT);
+  }
 
-  queryBuilder(chatRoomId, FIELD_CREATED_AT, 'desc')
-    .endBefore(messageMatch)
-    .limit(MESSAGES_UPDATE_LIMIT)
-    .onSnapshot(snapshot => {
-      const mappedMessages = snapshot.docs.map(doc => {
-        const chatMessage = mapToChatMessageModel(doc);
-        return chatMessage;
-      });
-      callback(mappedMessages);
+  query.onSnapshot(snapshot => {
+    const mappedMessages = snapshot.docs.map(doc => {
+      const chatMessage = mapToChatMessageModel(doc);
+      return chatMessage;
     });
+
+    callback(mappedMessages);
+  });
 };
 
 export const getNbrOfMessagesFromLastMessage = async (
@@ -43,23 +46,12 @@ export const getNbrOfMessagesFromLastMessage = async (
 ) => {
   const messageMatch = await queryBuilder(chatRoomId).doc(messageId).get();
 
-  const filteredMessagesDocuments = await queryBuilder(chatRoomId, FIELD_CREATED_AT, 'desc')
+  const filteredMessagesDocuments = await queryBuilder(chatRoomId, FIELD_CREATED_AT, 'asc')
     .startAfter(messageMatch)
     .limit(numberOfMessages)
     .get();
 
   return filteredMessagesDocuments.docs.map(doc => mapToChatMessageModel(doc));
-};
-
-export const getNewestNbrOfMessages = async (
-  chatRoomId: string,
-  numberOfMessages = MESSAGES_LIMIT
-) => {
-  let messagesDocuments = await queryBuilder(chatRoomId, FIELD_CREATED_AT, 'desc')
-    .limit(numberOfMessages)
-    .get();
-
-  return messagesDocuments.docs.map(doc => mapToChatMessageModel(doc));
 };
 
 const queryBuilder = (chatRoomId: string, orderBy?: string, order?: SORTING_ORDER) => {

@@ -4,7 +4,6 @@ import {Message} from '../models/Message';
 import {useContext, useEffect, useState} from 'react';
 import {ChatMessage} from '../components/ChatMessages/ChatMessage';
 import {
-  getNewestNbrOfMessages,
   listenToChatMessageUpdates,
   getNbrOfMessagesFromLastMessage
 } from '../services/ChatMessageService';
@@ -22,27 +21,20 @@ export const ChatRoomScreen = () => {
   } = useRoute<RouteProp<StackParamList, typeof SCREEN_NAME_CHAT_ROOM>>();
 
   useEffect(() => {
-    getInitialMessages();
-  }, [chatRoomId]);
-
-  const getInitialMessages = async () => {
-    const initialMessages = await getNewestNbrOfMessages(chatRoomId);
-    setMessages(initialMessages);
-  };
-
-  useEffect(() => {
-    if (messageSent) {
-      const listener = listenToChatMessageUpdates(
+    if (messages.length <= 0) {
+      listenToChatMessageUpdates(chatRoomId, newMessages => {
+        setMessages(newMessages);
+      });
+    } else {
+      listenToChatMessageUpdates(
         chatRoomId,
-        newMessages => setMessages(oldMessages => [...newMessages, ...oldMessages]),
-        messages[0].id!
+        newMessages => {
+          setMessages(oldMessages => [...newMessages, ...oldMessages]);
+        },
+        messages[0].id
       );
-
-      return () => {
-        listener;
-      };
     }
-  }, [messageSent]);
+  }, []);
 
   const loadOldMessages = async () => {
     const fetchedMessages = await getNbrOfMessagesFromLastMessage(
@@ -62,8 +54,8 @@ export const ChatRoomScreen = () => {
               <ChatMessage message={item} isCurrentUser={user?.uid === item.userId} />
             )}
             keyExtractor={item => item.id!}
-            inverted
             onEndReached={loadOldMessages}
+            inverted
           />
         ) : (
           ''
