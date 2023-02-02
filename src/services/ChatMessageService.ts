@@ -21,7 +21,7 @@ export const listenToChatMessageUpdates = async (
   callback: (messages: Message[]) => void,
   messageId?: string
 ) => {
-  let query = queryBuilder(chatRoomId, FIELD_CREATED_AT, 'asc');
+  let query = queryBuilder(chatRoomId, FIELD_CREATED_AT, 'desc');
   if (messageId) {
     const messageMatch = await queryBuilder(chatRoomId).doc(messageId).get();
     query.endBefore(messageMatch);
@@ -29,7 +29,29 @@ export const listenToChatMessageUpdates = async (
     query.limit(MESSAGES_LIMIT);
   }
 
-  query.onSnapshot(snapshot => {
+  // const res = await firestore()
+  //   .collection(DB_CHAT_ROOMS_COLLECTION_NAME)
+  //   .doc(chatRoomId)
+  //   .collection(DB_CHAT_MESSAGES_COLLECTION_NAME)
+  //   .orderBy('createdAt', 'asc')
+  //   .limit(2)
+  //   .get();
+
+  // const docs = res.docs;
+
+  // console.log({docs});
+  // const mapped = docs.map(doc => mapToChatMessageModel(doc));
+
+  // console.log({mapped});
+
+  // callback(mapped);
+
+  // .onSnapshot(snapshot =>
+  //   snapshot.docs.forEach(doc => console.log(doc.data().createdAt.toDate()))
+  // );
+
+  return query.onSnapshot(snapshot => {
+    console.log({docs: snapshot.docs.map(d => d.id)});
     const mappedMessages = snapshot.docs.map(doc => {
       const chatMessage = mapToChatMessageModel(doc);
       return chatMessage;
@@ -51,11 +73,11 @@ export const getNbrOfMessagesFromLastMessage = async (
     .limit(numberOfMessages)
     .get();
 
-  return filteredMessagesDocuments.docs.map(doc => mapToChatMessageModel(doc));
+  return filteredMessagesDocuments.docs.map(mapToChatMessageModel);
 };
 
 const queryBuilder = (chatRoomId: string, orderBy?: string, order?: SORTING_ORDER) => {
-  let query = firestore()
+  const query = firestore()
     .collection(DB_CHAT_ROOMS_COLLECTION_NAME)
     .doc(chatRoomId)
     .collection(DB_CHAT_MESSAGES_COLLECTION_NAME);
@@ -70,7 +92,7 @@ const queryBuilder = (chatRoomId: string, orderBy?: string, order?: SORTING_ORDE
 const FIELD_CREATED_AT = 'createdAt';
 type SORTING_ORDER = 'asc' | 'desc';
 
-const mapToChatMessageModel = (
+export const mapToChatMessageModel = (
   firestoreDocument: FirebaseFirestoreTypes.QueryDocumentSnapshot<FirebaseFirestoreTypes.DocumentData>
 ): Message => {
   const data = firestoreDocument.data();
