@@ -1,4 +1,4 @@
-import {RefreshControl, ScrollView, StyleSheet, View, Text} from 'react-native';
+import {RefreshControl, StyleSheet, View, Text} from 'react-native';
 import {useEffect, useState} from 'react';
 import {ChatRoomList} from '../components/ChatRoom/ChatRoomList';
 import {ChatRoom as ChatRoomModel} from '../models/ChatRoom';
