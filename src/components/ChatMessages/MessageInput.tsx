@@ -6,10 +6,9 @@ import {addChatMessageToChatRoom} from '../../services/ChatMessageService';
 
 type Props = {
   roomId: string;
-  onInputSubmitted: () => void;
 };
 
-export const MessageInput = ({roomId, onInputSubmitted}: Props) => {
+export const MessageInput = ({roomId}: Props) => {
   const [input, setInput] = useState<string>('');
   const {user} = useContext(AuthenticationContext);
 
@@ -27,7 +26,6 @@ export const MessageInput = ({roomId, onInputSubmitted}: Props) => {
 
     await addChatMessageToChatRoom(roomId, chatMessage);
     setInput('');
-    onInputSubmitted();
   };
 
   return (

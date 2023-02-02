@@ -14,7 +14,6 @@ import {SCREEN_NAME_CHAT_ROOM} from '../utils/globals';
 
 export const ChatRoomScreen = () => {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [messageSent, setMessageSent] = useState(false);
   const {user} = useContext(AuthenticationContext);
   const {
     params: {id: chatRoomId}
@@ -61,7 +60,7 @@ export const ChatRoomScreen = () => {
           ''
         )}
       </View>
-      <MessageInput roomId={chatRoomId} onInputSubmitted={() => setMessageSent(true)} />
+      <MessageInput roomId={chatRoomId} />
     </View>
   );
 };
