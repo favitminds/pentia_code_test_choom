@@ -1,6 +1,7 @@
 import {StyleSheet, View, Text} from 'react-native';
 import {ListItem} from '@rneui/themed';
 import {useNavigation} from '@react-navigation/native';
+import {TouchableOpacity} from 'react-native';
 
 type Props = {
   id: string;
@@ -15,13 +16,13 @@ export const ChatRoom = ({id, name, description}: Props) => {
     navigation.navigate('ChatRoom' as never, {id, name} as never);
   };
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={navigateToChatRoom}>
       <View>
         <Text>{name}</Text>
         <Text>{description}</Text>
       </View>
-      <ListItem.Chevron onPress={navigateToChatRoom} />
-    </View>
+      <ListItem.Chevron />
+    </TouchableOpacity>
   );
 };
 
