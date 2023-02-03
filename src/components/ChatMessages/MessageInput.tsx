@@ -16,13 +16,13 @@ export const MessageInput = ({roomId}: Props) => {
     // only submit if message exists
     if (!input) return;
 
-    const chatMessage = {
+    const chatMessage: Message = {
       createdAt: new Date(),
-      userId: user?.uid,
-      userName: user?.displayName,
-      avatarUrl: user?.photoURL,
+      userId: user?.uid!,
+      userName: user?.displayName!,
+      avatarUrl: user?.photoURL!,
       text: input
-    } as Message;
+    };
 
     await addChatMessageToChatRoom(roomId, chatMessage);
     setInput('');

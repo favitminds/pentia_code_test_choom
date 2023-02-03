@@ -1,14 +1,16 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React from 'react';
-import {Message} from '../../models/Message';
+import {Avatar} from '@rneui/themed';
 
 type Props = {
-  message: Message;
+  avatarUrl: string;
+  createdAt: Date;
+  text: string;
   isCurrentUser: boolean;
 };
 
-export const ChatMessage = ({message, isCurrentUser}: Props) => {
-  const formattedTime = `${message.createdAt.getHours()}:${message.createdAt.getMinutes()}`;
+export const ChatMessage = ({avatarUrl, createdAt, text, isCurrentUser}: Props) => {
+  const formattedDate = `${createdAt.toLocaleTimeString()} - ${createdAt.toLocaleDateString()}`;
   return (
     <View>
       <View
@@ -18,17 +20,24 @@ export const ChatMessage = ({message, isCurrentUser}: Props) => {
             : [styles.messageWrapper, styles.currentUserMessageWrapper]
         }>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          {/* <Ionicons name="person-circle-outline" size={30} color="black" style={styles.mavatar} /> */}
+          {!isCurrentUser && (
+            <Avatar
+              source={{uri: avatarUrl}}
+              rounded
+              size={30}
+              containerStyle={styles.messageAvatar}
+            />
+          )}
           <View
             style={
               !isCurrentUser
                 ? styles.message
                 : [styles.message, {backgroundColor: 'rgb(194, 243, 194)'}]
             }>
-            <Text>{message.text}</Text>
+            <Text>{text}</Text>
           </View>
         </View>
-        <Text style={{marginLeft: 40}}>{formattedTime}</Text>
+        <Text style={styles.date}>{formattedDate}</Text>
       </View>
     </View>
   );
@@ -50,8 +59,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 0
   },
-  mvatar: {
-    marginRight: 5
+  messageAvatar: {
+    marginRight: 10
+  },
+  date: {
+    color: 'black'
   }
 });
 
