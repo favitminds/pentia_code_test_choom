@@ -3,6 +3,7 @@ import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
 import {Message} from '../../models/Message';
 import {AuthenticationContext} from '../../services/authentication/AuthenticationContext';
 import {addChatMessageToChatRoom} from '../../services/ChatMessageService';
+import {updateEditTimeOfChatRoom} from '../../services/ChatRoomService';
 
 type Props = {
   roomId: string;
@@ -16,8 +17,10 @@ export const MessageInput = ({roomId}: Props) => {
     // only submit if message exists
     if (!input) return;
 
+    const editedAt = new Date();
+
     const chatMessage: Message = {
-      createdAt: new Date(),
+      createdAt: editedAt,
       userId: user?.uid!,
       userName: user?.displayName!,
       avatarUrl: user?.photoURL!,
@@ -25,6 +28,7 @@ export const MessageInput = ({roomId}: Props) => {
     };
 
     await addChatMessageToChatRoom(roomId, chatMessage);
+    await updateEditTimeOfChatRoom(roomId, editedAt);
     setInput('');
   };
 

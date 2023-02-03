@@ -3,13 +3,15 @@ import {useEffect, useState} from 'react';
 import {ChatRoomList} from '../components/ChatRoom/ChatRoomList';
 import {ChatRoom as ChatRoomModel} from '../models/ChatRoom';
 import {getChatRooms} from '../services/ChatRoomService';
+import {useIsFocused} from '@react-navigation/native';
 
 export const ChatRoomsScreen = () => {
   const [chatRooms, setChatRooms] = useState<ChatRoomModel[]>([]);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    fetchChatRooms().catch(console.error);
-  }, []);
+    fetchChatRooms();
+  }, [isFocused]);
 
   const fetchChatRooms = async () => {
     const rooms = await getChatRooms();
