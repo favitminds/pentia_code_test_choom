@@ -11,6 +11,7 @@ import {AuthenticationContext} from '../services/authentication/AuthenticationCo
 import {AppStackParamList} from '../navigation/AppNavigator';
 import {MessageInput} from '../components/ChatMessages/MessageInput';
 import {SCREEN_NAME_CHAT_ROOM} from '../utils/globals';
+import {colors} from '../theme/colors';
 
 export const ChatRoomScreen = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -32,36 +33,46 @@ export const ChatRoomScreen = () => {
   };
 
   return (
-    <View style={styles.messagingscreen}>
-      <View style={styles.messagingscreen}>
-        {messages.length > 0 ? (
-          <FlatList
-            data={messages}
-            renderItem={({item}) => (
-              <ChatMessage {...item} isCurrentUser={user?.uid === item.userId} />
-            )}
-            keyExtractor={item => item.id!}
-            inverted
-            onEndReachedThreshold={0.005}
-            initialNumToRender={50}
-            onEndReached={() => {
-              console.log('END REACHED');
-            }}
-          />
-        ) : (
-          ''
-        )}
+    <View style={styles.chatRoomScreen}>
+      <View style={styles.messagingLayout}>
+        <View style={styles.messagesLayout}>
+          {messages.length ? (
+            <FlatList
+              data={messages}
+              renderItem={({item}) => (
+                <ChatMessage {...item} isCurrentUser={user?.uid === item.userId} />
+              )}
+              keyExtractor={item => item.id!}
+              inverted
+              onEndReachedThreshold={0.005}
+              initialNumToRender={50}
+              onEndReached={() => {
+                console.log('END REACHED');
+              }}
+            />
+          ) : (
+            ''
+          )}
+        </View>
+        <MessageInput roomId={chatRoomId} />
       </View>
-      <MessageInput roomId={chatRoomId} />
     </View>
   );
 };
 
 export const styles = StyleSheet.create({
-  messagingscreen: {
+  chatRoomScreen: {
     flex: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 10
+    backgroundColor: colors.bg.primary
+  },
+  messagingLayout: {
+    flex: 1,
+    paddingTop: 10
+  },
+  messagesLayout: {
+    paddingHorizontal: 10,
+    paddingBottom: 10,
+    flex: 1
   }
 });
 

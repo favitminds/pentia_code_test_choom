@@ -14,10 +14,17 @@ export const ChatRoomList = ({chatRooms, onRefresh}: Props) => {
   const refreshControl = <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />;
 
   return (
-    <ScrollView refreshControl={refreshControl}>
+    <ScrollView refreshControl={refreshControl} style={styles.container}>
       {chatRooms.map(chatRoom => (
         <ChatRoom {...chatRoom} key={chatRoom.id} />
       ))}
     </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    width: '75%',
+    paddingBottom: 20
+  }
+});

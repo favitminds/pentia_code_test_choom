@@ -4,6 +4,7 @@ import {Message} from '../../models/Message';
 import {AuthenticationContext} from '../../services/authentication/AuthenticationContext';
 import {addChatMessageToChatRoom} from '../../services/ChatMessageService';
 import {updateEditTimeOfChatRoom} from '../../services/ChatRoomService';
+import {colors} from '../../theme/colors';
 
 type Props = {
   roomId: string;
@@ -34,10 +35,10 @@ export const MessageInput = ({roomId}: Props) => {
 
   return (
     <View style={styles.messaginginputContainer}>
-      <TextInput style={styles.messaginginput} onChangeText={setInput} value={input} />
+      <TextInput style={styles.messaginginput} multiline onChangeText={setInput} value={input} />
       <Pressable style={styles.messagingbuttonContainer} onPress={sendChatMessage}>
         <View>
-          <Text style={{color: 'black', fontSize: 20}}>SEND</Text>
+          <Text style={styles.buttonText}>Send</Text>
         </View>
       </Pressable>
     </View>
@@ -47,26 +48,29 @@ export const MessageInput = ({roomId}: Props) => {
 const styles = StyleSheet.create({
   messaginginputContainer: {
     width: '100%',
-    minHeight: 100,
-    backgroundColor: 'white',
-    paddingVertical: 30,
+    backgroundColor: colors.bg.primary,
+    paddingVertical: 20,
     paddingHorizontal: 15,
     justifyContent: 'center',
     flexDirection: 'row'
   },
   messaginginput: {
-    borderWidth: 1,
-    padding: 15,
+    backgroundColor: colors.chatMessage.bg.currentUser,
+    padding: 5,
     flex: 1,
     marginRight: 10,
     borderRadius: 10,
-    color: 'black'
+    color: colors.text.primary
   },
   messagingbuttonContainer: {
-    width: '30%',
-    backgroundColor: 'green',
+    width: '20%',
+    backgroundColor: colors.chatMessage.bg.currentUser,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 50
+    borderRadius: 10
+  },
+  buttonText: {
+    color: colors.text.primary,
+    fontSize: 15
   }
 });

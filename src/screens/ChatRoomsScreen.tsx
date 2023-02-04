@@ -4,6 +4,7 @@ import {ChatRoomList} from '../components/ChatRoom/ChatRoomList';
 import {ChatRoom as ChatRoomModel} from '../models/ChatRoom';
 import {getChatRooms} from '../services/ChatRoomService';
 import {useIsFocused} from '@react-navigation/native';
+import {colors} from '../theme/colors';
 
 export const ChatRoomsScreen = () => {
   const [chatRooms, setChatRooms] = useState<ChatRoomModel[]>([]);
@@ -31,16 +32,17 @@ export const ChatRoomsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     display: 'flex',
-    backgroundColor: 'pink',
+    backgroundColor: colors.bg.primary,
     alignItems: 'center',
     rowGap: 20,
     height: '100%'
   },
   titleContainer: {
-    marginTop: 20
+    marginTop: 20,
+    color: colors.text.primary
   },
   text: {
     fontSize: 20,
-    fontWeight: '700'
+    fontWeight: 'bold'
   }
 });
