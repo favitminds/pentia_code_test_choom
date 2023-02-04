@@ -5,6 +5,7 @@ import {TouchableOpacity} from 'react-native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {AppStackParamList} from '../../navigation/AppNavigator';
 import {SCREEN_NAME_CHAT_ROOM} from '../../utils/globals';
+import {colors} from '../../theme/colors';
 
 type Props = {
   id: string;
@@ -20,23 +21,35 @@ export const ChatRoom = ({id, name, description}: Props) => {
   };
   return (
     <TouchableOpacity style={styles.container} onPress={navigateToChatRoom}>
-      <View>
-        <Text>{name}</Text>
-        <Text>{description}</Text>
+      <View style={styles.text}>
+        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.description}>{description}</Text>
       </View>
-      <ListItem.Chevron />
+      <ListItem.Chevron size={30} />
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20,
-    padding: 20,
-    backgroundColor: 'red',
-    display: 'flex',
+    padding: 15,
+    marginBottom: 20,
+    backgroundColor: colors.chatRoom.bg.primary,
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    columnGap: 20,
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  text: {
+    flexDirection: 'column'
+  },
+  name: {
+    fontWeight: 'bold',
+    fontSize: 20
+  },
+  description: {
+    fontSize: 15,
+    marginLeft: 10
   }
 });

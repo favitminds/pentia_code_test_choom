@@ -1,6 +1,7 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React from 'react';
 import {Avatar} from '@rneui/themed';
+import {colors} from '../../theme/colors';
 
 type Props = {
   avatarUrl: string;
@@ -13,34 +14,28 @@ type Props = {
 export const ChatMessage = ({avatarUrl, createdAt, text, userName, isCurrentUser}: Props) => {
   const formattedDate = `${createdAt.toLocaleTimeString()} - ${createdAt.toLocaleDateString()}`;
   return (
-    <View>
-      <View
-        style={
-          !isCurrentUser
-            ? styles.messageWrapper
-            : [styles.messageWrapper, styles.currentUserMessageWrapper]
-        }>
-        <View style={styles.messageContentWrapper}>
-          {!isCurrentUser && (
-            <Avatar
-              source={{uri: avatarUrl}}
-              rounded
-              size={30}
-              containerStyle={styles.messageAvatar}
-            />
-          )}
-          <View style={styles.messageText}>
-            <Text style={styles.userName}>{userName}</Text>
-            <View
-              style={
-                !isCurrentUser
-                  ? styles.message
-                  : [styles.message, {backgroundColor: 'rgb(194, 243, 194)'}]
-              }>
-              <Text style={styles.text}>{text}</Text>
-            </View>
-            <Text style={styles.date}>{formattedDate}</Text>
+    <View
+      style={
+        !isCurrentUser
+          ? styles.messageWrapper
+          : [styles.messageWrapper, styles.currentUserMessageWrapper]
+      }>
+      <View style={styles.messageContentWrapper}>
+        {!isCurrentUser && (
+          <Avatar
+            source={{uri: avatarUrl}}
+            rounded
+            size={30}
+            containerStyle={styles.messageAvatar}
+          />
+        )}
+        <View style={styles.messageText}>
+          {!isCurrentUser && <Text style={styles.userName}>{userName}</Text>}
+          <View
+            style={!isCurrentUser ? styles.message : [styles.message, styles.currentUserMessage]}>
+            <Text style={styles.text}>{text}</Text>
           </View>
+          <Text style={styles.date}>{formattedDate}</Text>
         </View>
       </View>
     </View>
@@ -49,6 +44,7 @@ export const ChatMessage = ({avatarUrl, createdAt, text, userName, isCurrentUser
 
 const styles = StyleSheet.create({
   messageWrapper: {
+    flexDirection: 'column',
     width: '100%',
     alignItems: 'flex-start',
     marginBottom: 10
@@ -61,24 +57,31 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     width: '50%'
   },
-  messageText: {flexDirection: 'column', flexShrink: 1, flex: 1},
+  messageText: {
+    flexDirection: 'column',
+    flex: 1
+  },
   message: {
-    backgroundColor: '#f5ccc2',
+    backgroundColor: colors.chatMessage.bg.otherUsers,
     padding: 10,
     borderRadius: 15,
-    maxHeight: '100%',
-    width: '100%'
+    flexShrink: 1
+  },
+  currentUserMessage: {
+    backgroundColor: colors.chatMessage.bg.currentUser
   },
   messageAvatar: {
     marginRight: 5
   },
   userName: {
-    color: 'black',
+    color: colors.text.primary,
     fontSize: 15
   },
-  text: {},
+  text: {
+    color: colors.text.primary
+  },
   date: {
-    color: 'black',
+    color: colors.text.primary,
     fontSize: 12
   }
 });
