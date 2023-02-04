@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Image} from 'react-native';
 import React from 'react';
 import {Avatar} from '@rneui/themed';
 import {colors} from '../../theme/colors';
@@ -9,10 +9,20 @@ type Props = {
   text: string;
   userName: string;
   isCurrentUser: boolean;
+  isImage?: boolean;
 };
 
-export const ChatMessage = ({avatarUrl, createdAt, text, userName, isCurrentUser}: Props) => {
+export const ChatMessage = ({
+  avatarUrl,
+  createdAt,
+  text,
+  userName,
+  isCurrentUser,
+  isImage
+}: Props) => {
   const formattedDate = `${createdAt.toLocaleTimeString()} - ${createdAt.toLocaleDateString()}`;
+  console.log(isImage);
+
   return (
     <View
       style={
@@ -33,7 +43,11 @@ export const ChatMessage = ({avatarUrl, createdAt, text, userName, isCurrentUser
           {!isCurrentUser && <Text style={styles.userName}>{userName}</Text>}
           <View
             style={!isCurrentUser ? styles.message : [styles.message, styles.currentUserMessage]}>
-            <Text style={styles.text}>{text}</Text>
+            {isImage ? (
+              <Image style={styles.image} source={{uri: text}} />
+            ) : (
+              <Text style={styles.text}>{text}</Text>
+            )}
           </View>
           <Text style={styles.date}>{formattedDate}</Text>
         </View>
@@ -83,6 +97,10 @@ const styles = StyleSheet.create({
   date: {
     color: colors.text.primary,
     fontSize: 12
+  },
+  image: {
+    width: 120,
+    height: 160
   }
 });
 

@@ -1,7 +1,7 @@
 import {View, StyleSheet, FlatList} from 'react-native';
 import {RouteProp, useRoute} from '@react-navigation/native';
-import {Message} from '../models/Message';
 import {useContext, useEffect, useState} from 'react';
+import {Message} from '../models/Message';
 import {ChatMessage} from '../components/ChatMessages/ChatMessage';
 import {
   listenToChatMessageUpdates,
