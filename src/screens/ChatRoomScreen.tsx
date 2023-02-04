@@ -8,7 +8,7 @@ import {
   getNbrOfMessagesFromLastMessage
 } from '../services/ChatMessageService';
 import {AuthenticationContext} from '../services/authentication/AuthenticationContext';
-import {StackParamList} from '../navigation/Navigation';
+import {AppStackParamList} from '../navigation/AppNavigator';
 import {MessageInput} from '../components/ChatMessages/MessageInput';
 import {SCREEN_NAME_CHAT_ROOM} from '../utils/globals';
 
@@ -17,7 +17,7 @@ export const ChatRoomScreen = () => {
   const {user} = useContext(AuthenticationContext);
   const {
     params: {id: chatRoomId}
-  } = useRoute<RouteProp<StackParamList, typeof SCREEN_NAME_CHAT_ROOM>>();
+  } = useRoute<RouteProp<AppStackParamList, typeof SCREEN_NAME_CHAT_ROOM>>();
 
   useEffect(() => {
     const listener = listenToChatMessageUpdates(chatRoomId, setMessages);

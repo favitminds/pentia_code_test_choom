@@ -16,12 +16,7 @@ export const ChatRoomList = ({chatRooms, onRefresh}: Props) => {
   return (
     <ScrollView refreshControl={refreshControl}>
       {chatRooms.map(chatRoom => (
-        <ChatRoom
-          name={chatRoom.name}
-          description={chatRoom.description}
-          id={chatRoom.id}
-          key={chatRoom.id}
-        />
+        <ChatRoom {...chatRoom} key={chatRoom.id} />
       ))}
     </ScrollView>
   );
