@@ -6,10 +6,11 @@ type Props = {
   avatarUrl: string;
   createdAt: Date;
   text: string;
+  userName: string;
   isCurrentUser: boolean;
 };
 
-export const ChatMessage = ({avatarUrl, createdAt, text, isCurrentUser}: Props) => {
+export const ChatMessage = ({avatarUrl, createdAt, text, userName, isCurrentUser}: Props) => {
   const formattedDate = `${createdAt.toLocaleTimeString()} - ${createdAt.toLocaleDateString()}`;
   return (
     <View>
@@ -19,7 +20,7 @@ export const ChatMessage = ({avatarUrl, createdAt, text, isCurrentUser}: Props) 
             ? styles.messageWrapper
             : [styles.messageWrapper, styles.currentUserMessageWrapper]
         }>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View style={styles.messageContentWrapper}>
           {!isCurrentUser && (
             <Avatar
               source={{uri: avatarUrl}}
@@ -28,16 +29,19 @@ export const ChatMessage = ({avatarUrl, createdAt, text, isCurrentUser}: Props) 
               containerStyle={styles.messageAvatar}
             />
           )}
-          <View
-            style={
-              !isCurrentUser
-                ? styles.message
-                : [styles.message, {backgroundColor: 'rgb(194, 243, 194)'}]
-            }>
-            <Text>{text}</Text>
+          <View style={styles.messageText}>
+            <Text style={styles.userName}>{userName}</Text>
+            <View
+              style={
+                !isCurrentUser
+                  ? styles.message
+                  : [styles.message, {backgroundColor: 'rgb(194, 243, 194)'}]
+              }>
+              <Text style={styles.text}>{text}</Text>
+            </View>
+            <Text style={styles.date}>{formattedDate}</Text>
           </View>
         </View>
-        <Text style={styles.date}>{formattedDate}</Text>
       </View>
     </View>
   );
@@ -47,23 +51,35 @@ const styles = StyleSheet.create({
   messageWrapper: {
     width: '100%',
     alignItems: 'flex-start',
-    marginBottom: 2
+    marginBottom: 10
   },
   currentUserMessageWrapper: {
     alignItems: 'flex-end'
   },
+  messageContentWrapper: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    width: '50%'
+  },
+  messageText: {flexDirection: 'column', flexShrink: 1, flex: 1},
   message: {
-    maxWidth: '50%',
     backgroundColor: '#f5ccc2',
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 0
+    padding: 10,
+    borderRadius: 15,
+    maxHeight: '100%',
+    width: '100%'
   },
   messageAvatar: {
-    marginRight: 10
+    marginRight: 5
   },
+  userName: {
+    color: 'black',
+    fontSize: 15
+  },
+  text: {},
   date: {
-    color: 'black'
+    color: 'black',
+    fontSize: 12
   }
 });
 
