@@ -12,7 +12,8 @@ export const addChatMessageToChatRoom = async (chatRoomId: string, message: Mess
     userName: message.userName,
     userId: message.userId,
     text: message.text,
-    createdAt: message.createdAt
+    createdAt: message.createdAt,
+    isImage: message.isImage
   });
 };
 
@@ -76,7 +77,8 @@ export const mapToChatMessageModel = (
     text: data.text,
     createdAt: data.createdAt.toDate(),
     userId: data.userId,
-    userName: data.userName
+    userName: data.userName,
+    isImage: data.isImage
   };
 };
 

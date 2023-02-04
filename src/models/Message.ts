@@ -5,4 +5,5 @@ export type Message = {
   userName: string;
   createdAt: Date;
   text: string;
+  isImage?: boolean;
 };
