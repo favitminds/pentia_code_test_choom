@@ -8,6 +8,7 @@ interface IAuthenticationContext {
   error: string;
   handleGoogleAuthentication: () => void;
   handleFacebookAuthentication: () => void;
+  signOut: () => void;
 }
 
 type Props = {
@@ -18,6 +19,7 @@ export const AuthenticationContext = createContext<IAuthenticationContext>({
   error: '',
   handleFacebookAuthentication() {},
   handleGoogleAuthentication() {},
+  signOut() {},
   user: undefined
 });
 
@@ -76,6 +78,10 @@ export const AuthenticationContextProvider = ({children}: Props) => {
     }
   };
 
+  const signOut = async () => {
+    await auth().signOut();
+  };
+
   auth().onAuthStateChanged(usr => {
     if (usr) {
       setUser(usr);
@@ -86,7 +92,7 @@ export const AuthenticationContextProvider = ({children}: Props) => {
 
   return (
     <AuthenticationContext.Provider
-      value={{error, handleFacebookAuthentication, handleGoogleAuthentication, user}}>
+      value={{error, handleFacebookAuthentication, handleGoogleAuthentication, user, signOut}}>
       {children}
     </AuthenticationContext.Provider>
   );
