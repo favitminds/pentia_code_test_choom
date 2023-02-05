@@ -17,27 +17,52 @@ export const addChatMessageToChatRoom = async (chatRoomId: string, message: Mess
   });
 };
 
-export const listenToChatMessageUpdates = async (
+export const listenToChatMessageUpdates = (
   chatRoomId: string,
-  callback: (messages: Message[]) => void,
-  messageId?: string
+  messageDocument: FirebaseFirestoreTypes.DocumentSnapshot<FirebaseFirestoreTypes.DocumentData>,
+  callback: (messages: Message[]) => void
 ) => {
-  const query = firestore()
+  return firestore()
     .collection(DB_CHAT_ROOMS_COLLECTION_NAME)
     .doc(chatRoomId)
     .collection(DB_CHAT_MESSAGES_COLLECTION_NAME)
-    .orderBy(FIELD_CREATED_AT, 'desc');
-  if (messageId) {
-    const messageMatch = await queryBuilder(chatRoomId).doc(messageId).get();
-    query.endBefore(messageMatch);
-  }
-  query.limit(MESSAGES_LIMIT);
+    .orderBy(FIELD_CREATED_AT, 'desc')
+    .endBefore(messageDocument)
+    .limit(MESSAGES_LIMIT)
+    .onSnapshot(snapshot => {
+      const mappedMessages = snapshot.docs.map(mapToChatMessageModel);
+      callback(mappedMessages);
+    });
+};
 
-  return query.onSnapshot(snapshot => {
-    const mappedMessages = snapshot.docs.map(mapToChatMessageModel);
+export const getMessageFromChatRoom = async (
+  chatRoomId: string,
+  messageId: string,
+  callback: (
+    messageDocument: FirebaseFirestoreTypes.DocumentSnapshot<FirebaseFirestoreTypes.DocumentData>
+  ) => void
+) => {
+  callback(await queryBuilder(chatRoomId).doc(messageId).get());
+};
 
-    callback(mappedMessages);
-  });
+export const listenToInitialChatMessageUpdates = (
+  chatRoomId: string,
+  callback: (messages: Message[]) => void
+) => {
+  return firestore()
+    .collection(DB_CHAT_ROOMS_COLLECTION_NAME)
+    .doc(chatRoomId)
+    .collection(DB_CHAT_MESSAGES_COLLECTION_NAME)
+    .orderBy(FIELD_CREATED_AT, 'desc')
+    .limit(MESSAGES_LIMIT)
+    .onSnapshot(snapshot => {
+      const mappedMessages = snapshot.docs.map(doc => {
+        const chatMessage = mapToChatMessageModel(doc);
+        return chatMessage;
+      });
+
+      callback(mappedMessages);
+    });
 };
 
 export const getNbrOfMessagesFromLastMessage = async (
