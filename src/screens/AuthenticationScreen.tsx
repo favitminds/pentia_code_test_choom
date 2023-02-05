@@ -1,6 +1,6 @@
 import {StyleSheet, Text, View} from 'react-native';
 import {SocialIcon} from '@rneui/themed';
-import {AuthenticationContext} from '../services/authentication/AuthenticationContext';
+import {AuthenticationContext} from '../context/authentication/AuthenticationContext';
 import {useContext} from 'react';
 import {colors} from '../theme/colors';
 

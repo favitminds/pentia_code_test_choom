@@ -4,4 +4,3 @@ export const SCREEN_NAME_CHAT_ROOM = 'ChatRoom';
 export const SCREEN_NAME_CHAT_ROOMS_LIST = 'Choom';
 export const SCREEN_NAME_SIGN_UP = 'SignUp';
 export const MESSAGES_LIMIT = 50;
-export const MESSAGES_UPDATE_LIMIT = 1;

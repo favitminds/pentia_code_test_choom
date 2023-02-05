@@ -21,7 +21,6 @@ export const ChatMessage = ({
   isImage
 }: Props) => {
   const formattedDate = `${createdAt.toLocaleTimeString()} - ${createdAt.toLocaleDateString()}`;
-  console.log(isImage);
 
   return (
     <View
