@@ -21,6 +21,7 @@ export const ChatRoomScreen = () => {
   const {
     params: {id: chatRoomId}
   } = useRoute<RouteProp<AppStackParamList, typeof SCREEN_NAME_CHAT_ROOM>>();
+  const [initialRun, setInitialRun] = useState(true);
 
   let messageSubscriber: (() => void) | null = null;
 
@@ -29,23 +30,19 @@ export const ChatRoomScreen = () => {
    same time, the first listener should still listen, if no messages are present in firestore, and eventually show up.
 
    The second listener is added, so that only newer messages than the messages in the state, are fetched.
-
-   Best scenario would be, to have the second listener, to not be unsubscribed every rerender, but listen to new 
-   messages. The issue is, even though the first element in the "messages" array changes, the listener is called once,
-   and therefore the reference for the first element of the messages array, when passed to the second listener, 
-   stays the same, meaning there will be duplicates in the messages array. 
   */
   useEffect(() => {
-    if (messages.length <= 0) {
+    if (initialRun) {
       messageSubscriber = listenToInitialChatMessageUpdates(chatRoomId, newMessages => {
         if (newMessages.length) {
           setMessages(newMessages);
+          setInitialRun(false);
         }
       });
-    } else if (messages.length > 0) {
+    } else {
       getMessageFromChatRoom(chatRoomId, messages[0].id!, messageDocument => {
-        messageSubscriber = listenToChatMessageUpdates(chatRoomId, messageDocument, newMessages => {
-          newMessages.length && setMessages(oldMessages => [...newMessages, ...oldMessages]);
+        messageSubscriber = listenToChatMessageUpdates(chatRoomId, messageDocument, newMessage => {
+          newMessage && setMessages(oldMessages => [newMessage, ...oldMessages]);
         });
       });
     }
@@ -55,7 +52,7 @@ export const ChatRoomScreen = () => {
         messageSubscriber();
       }
     };
-  }, [messages]);
+  }, [initialRun]);
 
   const loadOldMessages = async () => {
     // Check is for not loading older messages as soon as the user enters the app, and only fetch older messages
@@ -63,7 +60,7 @@ export const ChatRoomScreen = () => {
     if (messages.length >= MESSAGES_LIMIT) {
       const fetchedMessages = await getNbrOfMessagesFromLastMessage(
         chatRoomId,
-        messages[messages.length - 1].id
+        messages[messages.length - 1].id!
       );
       if (fetchedMessages) {
         setMessages(messages => [...messages, ...fetchedMessages]);
