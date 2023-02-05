@@ -6,5 +6,9 @@ import {AppNavigator} from './AppNavigator';
 
 export const Navigation = () => {
   const {user} = useContext(AuthenticationContext);
-  return <NavigationContainer>{!user ? <AuthNavigator /> : <AppNavigator />}</NavigationContainer>;
+  return (
+    <NavigationContainer linking={{prefixes: ['choom://']}}>
+      {!user ? <AuthNavigator /> : <AppNavigator />}
+    </NavigationContainer>
+  );
 };
