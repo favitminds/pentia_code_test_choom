@@ -37,6 +37,21 @@ export const listenToChatMessageUpdates = (
     });
 };
 
+export const listenToMessageUpdates = (chatRoomId: string, callback: () => void) => {
+  return firestore()
+    .collection(DB_CHAT_ROOMS_COLLECTION_NAME)
+    .doc(chatRoomId)
+    .collection(DB_CHAT_MESSAGES_COLLECTION_NAME)
+    .orderBy(FIELD_CREATED_AT, 'desc')
+    .onSnapshot(snapshot => {
+      snapshot.docChanges().forEach(change => {
+        if (change.type === 'added') {
+          callback();
+        }
+      });
+    });
+};
+
 export const getMessageFromChatRoom = async (
   chatRoomId: string,
   messageId: string,

@@ -11,9 +11,10 @@ import {colors} from '../../theme/colors';
 
 type Props = {
   roomId: string;
+  onInputSubmitted: () => void;
 };
 
-export const MessageInput = ({roomId}: Props) => {
+export const MessageInput = ({roomId, onInputSubmitted}: Props) => {
   const [input, setInput] = useState<string>('');
   const {user} = useContext(AuthenticationContext);
 
@@ -43,6 +44,7 @@ export const MessageInput = ({roomId}: Props) => {
     await addChatMessageToChatRoom(roomId, chatMessage);
     await updateEditTimeOfChatRoom(roomId, createdAt);
     setInput('');
+    onInputSubmitted();
   };
 
   const onLaunchCamera = async () => {

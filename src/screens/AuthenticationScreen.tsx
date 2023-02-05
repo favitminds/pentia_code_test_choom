@@ -3,7 +3,7 @@ import {SocialIcon} from '@rneui/themed';
 import {AuthenticationContext} from '../context/authentication/AuthenticationContext';
 import {useContext} from 'react';
 import {colors} from '../theme/colors';
-import {CustomDialog} from '../components/Overlays/ErrorDialog';
+import {CustomDialog} from '../components/Overlays/CustomDialog';
 
 export const AuthenticationScreen = () => {
   const {handleFacebookAuthentication, handleGoogleAuthentication, error, resetError} =

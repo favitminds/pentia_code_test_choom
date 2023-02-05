@@ -1,8 +1,10 @@
-import {View, StyleSheet, FlatList} from 'react-native';
+import {View, StyleSheet, FlatList, Button} from 'react-native';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {useContext, useEffect, useState} from 'react';
 import {Message} from '../models/Message';
 import {ChatMessage} from '../components/ChatMessages/ChatMessage';
+import notifee from '@notifee/react-native';
+
 import {
   getMessageFromChatRoom,
   listenToInitialChatMessageUpdates,
@@ -14,14 +16,18 @@ import {AppStackParamList} from '../navigation/AppNavigator';
 import {MessageInput} from '../components/ChatMessages/MessageInput';
 import {MESSAGES_LIMIT, SCREEN_NAME_CHAT_ROOM} from '../utils/globals';
 import {colors} from '../theme/colors';
+import {CustomDialog} from '../components/Overlays/CustomDialog';
+import {NotificationContext} from '../context/notifications/NotificationContext';
 
 export const ChatRoomScreen = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const {user} = useContext(AuthenticationContext);
+  const {listenToChatRoom} = useContext(NotificationContext);
   const {
-    params: {id: chatRoomId}
+    params: {id: chatRoomId, name: chatRoomName}
   } = useRoute<RouteProp<AppStackParamList, typeof SCREEN_NAME_CHAT_ROOM>>();
   const [initialRun, setInitialRun] = useState(true);
+  const [showDialog, setShowDialog] = useState<'show' | 'hide' | 'dismiss'>('hide');
 
   let messageSubscriber: (() => void) | null = null;
 
@@ -68,8 +74,21 @@ export const ChatRoomScreen = () => {
     }
   };
 
+  const setupNotificationsForRoom = () => {
+    listenToChatRoom(chatRoomId, chatRoomName);
+    setShowDialog('dismiss');
+  };
+
   return (
     <View style={styles.chatRoomScreen}>
+      {showDialog === 'show' && (
+        <CustomDialog
+          description="Want notifications from this room?"
+          title="Notifications Permission"
+          onOkay={setupNotificationsForRoom}
+          onClose={() => setShowDialog('dismiss')}
+        />
+      )}
       <View style={styles.messagingLayout}>
         <View style={styles.messagesLayout}>
           {messages.length ? (
@@ -86,7 +105,10 @@ export const ChatRoomScreen = () => {
             ''
           )}
         </View>
-        <MessageInput roomId={chatRoomId} />
+        <MessageInput
+          roomId={chatRoomId}
+          onInputSubmitted={() => showDialog === 'hide' && setShowDialog('show')}
+        />
       </View>
     </View>
   );
