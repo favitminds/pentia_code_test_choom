@@ -3,7 +3,7 @@ import {useContext, useState} from 'react';
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
 import {ImagePickerResponse, launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {Message} from '../../models/Message';
-import {AuthenticationContext} from '../../services/authentication/AuthenticationContext';
+import {AuthenticationContext} from '../../context/authentication/AuthenticationContext';
 import {addChatMessageToChatRoom} from '../../services/ChatMessageService';
 import {updateEditTimeOfChatRoom} from '../../services/ChatRoomService';
 import {sendImageToChatRoom} from '../../services/ImageStorageService';
@@ -22,6 +22,7 @@ export const MessageInput = ({roomId}: Props) => {
     if (!input && !imageUrl) {
       return;
     }
+
     const createdAt = new Date();
     const chatMessage: Message = {
       createdAt: createdAt,
@@ -82,7 +83,7 @@ export const MessageInput = ({roomId}: Props) => {
         onPress={onLaunchImageLibrary}
       />
       <TextInput style={styles.input} multiline onChangeText={setInput} value={input} />
-      <Pressable style={styles.button} onPress={() => sendChatMessage}>
+      <Pressable style={styles.button} onPress={async () => await sendChatMessage()}>
         <Text style={styles.buttonText}>Send</Text>
       </Pressable>
     </View>

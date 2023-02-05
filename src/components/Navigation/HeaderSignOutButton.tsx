@@ -1,7 +1,7 @@
 import {Icon} from '@rneui/themed';
 import {useContext} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {AuthenticationContext} from '../../services/authentication/AuthenticationContext';
+import {AuthenticationContext} from '../../context/authentication/AuthenticationContext';
 import {colors} from '../../theme/colors';
 
 export const HeaderSignOutButton = () => {
