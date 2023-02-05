@@ -20,7 +20,7 @@ export const addChatMessageToChatRoom = async (chatRoomId: string, message: Mess
 export const listenToChatMessageUpdates = (
   chatRoomId: string,
   messageDocument: FirebaseFirestoreTypes.DocumentSnapshot<FirebaseFirestoreTypes.DocumentData>,
-  callback: (messages: Message[]) => void
+  callback: (newMessage: Message) => void
 ) => {
   return firestore()
     .collection(DB_CHAT_ROOMS_COLLECTION_NAME)
@@ -28,10 +28,12 @@ export const listenToChatMessageUpdates = (
     .collection(DB_CHAT_MESSAGES_COLLECTION_NAME)
     .orderBy(FIELD_CREATED_AT, 'desc')
     .endBefore(messageDocument)
-    .limit(MESSAGES_LIMIT)
     .onSnapshot(snapshot => {
-      const mappedMessages = snapshot.docs.map(mapToChatMessageModel);
-      callback(mappedMessages);
+      snapshot.docChanges().forEach(change => {
+        if (change.type === 'added') {
+          callback(mapToChatMessageModel(change.doc));
+        }
+      });
     });
 };
 
@@ -67,7 +69,7 @@ export const listenToInitialChatMessageUpdates = (
 
 export const getNbrOfMessagesFromLastMessage = async (
   chatRoomId: string,
-  messageId?: string,
+  messageId: string,
   numberOfMessages = MESSAGES_LIMIT
 ) => {
   const messageMatch = await queryBuilder(chatRoomId).doc(messageId).get();
