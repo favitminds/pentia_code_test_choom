@@ -3,13 +3,15 @@ import {SocialIcon} from '@rneui/themed';
 import {AuthenticationContext} from '../context/authentication/AuthenticationContext';
 import {useContext} from 'react';
 import {colors} from '../theme/colors';
+import {CustomDialog} from '../components/Overlays/ErrorDialog';
 
 export const AuthenticationScreen = () => {
-  const {handleFacebookAuthentication, handleGoogleAuthentication} =
+  const {handleFacebookAuthentication, handleGoogleAuthentication, error, resetError} =
     useContext(AuthenticationContext);
 
   return (
     <View style={styles.screen}>
+      {error && <CustomDialog onClose={resetError} title="Sign in Error" description={error} />}
       <Text style={styles.title}>Sign Up</Text>
       <View style={styles.row}>
         <SocialIcon
